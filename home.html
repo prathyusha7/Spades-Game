@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html class="spades">
+<head>
+    <title>Spades | Play it online</title>
+    <meta charset="utf-8"> 
+
+    
+    <link rel="stylesheet" href="game.css" />
+   
+    <link href='https://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+ 
+    <script>
+        var category = 'Spades';
+        var slug = 'spades';
+        var siteVersion = 827;
+    
+        var defaultSettings = {"showScoreCard": true, "speed": {"defaultValue": "normal", "allowedValues": ["verySlow", "slow", "normal", "fast", "veryFast"]}};
+    
+
+    var defaultSiteSettings = {"acceptCookies": false, "svg": {"defaultValue": "onlyOnRetinaScreens", "allowedValues": ["onlyOnRetinaScreens", "always", "never"], "label": "Use SVG images"}, "svgPreRenderPng": false, "playerImage": {"defaultValue": 0, "allowedValues": [0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}, "localSvgCards": true};
+
+    </script>
+    
+    <script>
+    var date = new Date();
+
+    var supportsSvg = false;
+
+    try {
+        supportsSvg = document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Image', '1.1');
+    } catch(ex) {}
+
+    var theme = ''; //Special themes for Halloween, christmas etc.
+    
+    if (date.getDate() == 31 && date.getMonth() == 9) {
+        theme = 'halloween';
+    }
+
+    if (date.getMonth() == 11 && date.getDate() >= 10 && date.getDate() <= 26) {
+        theme = 'xmas';
+    }
+
+    var easterSundays = [new Date(2016,2,27), new Date(2017,3,16), new Date(2018,3,1), new Date(2019,3,21)];
+
+    var timestamp = date.getTime();
+    for (var i=0; i < easterSundays.length; i++) {
+        var easterSunday = easterSundays[i];
+        var oneDay = 24 * 60 * 60 * 1000;
+        var minDay = easterSunday.getTime() - 7*oneDay;
+        var maxDay = easterSunday.getTime() + oneDay;
+        if (timestamp >= minDay && timestamp < maxDay && supportsSvg) {
+            theme = 'easter';
+        }
+    }
+
+
+    if (document.cookie.indexOf(theme +'=0') != -1) {
+        //User has turned off the theme...
+        theme = '';
+    }
+
+    //Overrides...
+    if (document.location.search.match(/\btheme=(\w+)/)) {
+        theme = RegExp.$1;
+    }
+
+    if (theme) {
+        document.write("<link href='/shared/themes/827/" + theme + ".min.css' rel='stylesheet' type='text/css'>");
+        var html = document.getElementsByTagName('html');
+        if (html && html[0]) {
+            html[0].className += ' themed ' + theme;
+        }
+
+        function turnOffTheme(e) {
+            var html = document.getElementsByTagName('html')[0].className = slug;
+            document.cookie = theme + '=0; path=/';
+        }
+    }
+    </script>
+
+    
+    
+
+</head>
+<body class="svg">
+    <div id="wrapper">
+        <!-- row 2, with [ad|header-and-board|ad] -->
+        <div id="board-wrapper-and-ads">
+            <div id="draper-left" class="don-draper">
+            </div>
+			<br />
+            <div id="board-and-header">
+                <div id="header">
+                    <div id="menucontainer">
+                        <ul id="menu">
+							<li><a title="Start a new game of Spades against the computer" href="#newgame">New Game</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                
+                <div id="board" class="board spades">
+                    
+
+<div id="play-page" class="inner-page">
+    
+
+        <div id="left-player" class="avatar">
+            <div class="face-small face-1"></div>
+            <small>John</small>
+        </div>
+        <div id="left-player-bubble" class="bubble"><p><span></span></p></div>
+
+        <div id="right-player" class="avatar">
+            <div class="face-small face-3"></div>
+            <small>Lisa</small>
+        </div>
+        <div id="right-player-bubble" class="bubble"><p><span></span></p></div>
+        
+        <div id="top-player" class="avatar">
+            <div class="face-small face-2"></div>
+            <small>Bill</small>
+        </div>
+        <div id="top-player-bubble" class="bubble"><p><span></span></p></div>
+
+        <div id="bottom-player" class="avatar">
+            <div class="face-small face-0"></div>
+            <small>You</small>
+        </div>
+        <div id="bottom-player-bubble" class="bubble"><p><span></span></p></div>
+
+       
+    <div id="messageBox"><p>Click Deal to start the game.</p></div>
+
+    
+    <div id="deal"><button class="big">Deal</button></div>
+	<div id="bid-div">
+		<div id="bid-div-inner">
+			<h4>What is your bid?</h4>
+		</div>
+	</div>
+	<div id="bigspade"></div>
+ 	<div id="top-player-trick-count" class="trick-count"></div>
+ 	<div id="bottom-player-trick-count" class="trick-count"></div>
+ 	<div id="left-player-trick-count" class="trick-count"></div>
+ 	<div id="right-player-trick-count" class="trick-count"></div>
+
+ 	<div id="inline-score">
+ 		<h5>Current Score</h5>
+ 		<table>
+ 			<tr>
+ 				<th>You &amp; Bill</th>
+ 				<td id="you-bill-score">0</td>
+ 				<td id="you-bill-bags">(0 bags)</td>
+ 			</tr>
+ 			<tr>
+ 				<th>John &amp; Lisa</th>
+ 				<td id="john-lisa-score">0</td>
+ 				<td id="john-lisa-bags">(0 bags)</d>
+ 			</tr>
+ 		</table>
+ 	</div>
+
+
+
+    
+	<!-- Win and lose screens -->
+	<div class="dialog results" id="result-box">
+		<h3 id="result-header">Congratulations, you won this hand!</h3>
+		<div id="winner-pics">
+            <div class="trophy"></div>
+			<span id="winner1"></span>
+			<span id="winner2"></span>
+            <div class="trophy"></div>
+		</div>
+		<h5>Round X</h5>
+		<div class="result-table">
+			<table>
+				<tr id="names-row">
+					<th></th>
+					<th>You &amp; Bill</th>
+					<th>John &amp; Lisa</th>
+				</tr>
+				<tr id="combined-bid">
+					<td>Combined bid</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="tricks-taken">
+					<td>Tricks taken</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="bags">
+					<td>Bags</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="bags-last-round">
+					<td>Bags from last round</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="bags-total">
+					<td>Total bags</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<!--
+				<tr id="bags-next-round">
+					<th>Bags carried to next round</th>
+					<td></td>
+					<td></td>
+				</tr>
+				-->
+				<tr id="scoring-header">
+					<th colspan="3">Scoring</th>
+				</tr>
+				<tr id="successful-bid">
+					<td>Successful bid</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="failed-bid">
+					<td>Failed bid</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="bag-score">
+					<td>Bag score</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="bag-penalty">
+					<td>Bag penalty</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="successful-nil-bid">
+					<td>Successful nil bid</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="failed-nil-bid">
+					<td>Failed nil bid</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="points-this-round" class="totals">
+					<td>Points this round</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="points-last-round">
+					<td>Points from previous rounds</td>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+				<tr id="points-total" class="thick-top">
+					<th>Total points</th>
+					<td class="t1"></td>
+					<td class="t2"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="button-panel">
+			<button class="button" id="start-new-game">Play another hand!</button>
+			<button class="button" id="reset-game">Reset scores</button>
+			<button class="button" id="start-new-tournament">Start a new game!</button>
+		</div>
+	</div>
+
+</div>
+
+
+ 
+            <div style="clear:both"></div>
+
+        </div>
+        <!--end row 2 -->
+
+        <!-- row 3, all text content -->
+        <div id="textcontent">
+
+        
+            
+
+        <!-- end row 3 -->
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="game.js"></script>
+    </div>
+    
+    
+    
+</body>
+</html>
